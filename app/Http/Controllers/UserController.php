@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegistrationRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -29,6 +32,17 @@ class UserController extends Controller
                 return $this->returnResponseJson($user,200);
             }
         return response()->json([],404);
+    }
+
+    public function getUser(Request $request) : JsonResponse
+    {
+        return response()->json(new UserResource($request->user()));
+    }
+
+    public function logout(Request $request) : Response
+    {
+        $request->user()->tokens()->delete();
+        return response()->noContent();
     }
 
 
