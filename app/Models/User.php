@@ -12,8 +12,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
 
-    protected $table = 'users2';
-
     protected $guarded = [
         'id'
     ];
