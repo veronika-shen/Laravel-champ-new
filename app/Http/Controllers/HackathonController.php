@@ -16,9 +16,9 @@ class HackathonController extends Controller
     return response()->json(HackathonResource::collection(Hackathon::all()));
  }
 
- public function show(Request $request): JsonResponse
+ public function show(Hackathon $hackathon): JsonResponse
  {
-     $hackathon = Hackathon::query()->where(id, $request->get(id));
+    return response()->json(new HackathonResource($hackathon));
  }
 
  public function store(HackathonRequest $request): JsonResponse
@@ -37,4 +37,30 @@ class HackathonController extends Controller
 
        return response()->json(new HackathonResource($hackathon));
  }
+
+ public function update(HackathonRequest $request, Hackathon $hackathon): JsonResponse
+ {
+    $hackathon->update([
+        'name' => $request->get('name'),
+        'registration_date_begin' => $request->get('registration_date_begin'),
+        'registration_date_end' => $request->get('registration_date_end'),
+        'start_date_begin' => $request->get('start_date_begin'),
+        'start_date_end' => $request->get('start_date_end'),
+        'max_members_count' => $request->get('max_members_count'),
+        'description' => $request->get('description'),
+        'task' => $request->get('task'),
+    ]);
+    return response()->json(new HackathonResource($hackathon));
+ }
+public function user(): JsonResponse
+{
+    $usersHackathon = Hackathon::query()->whereUserId(auth()->user()->id)->get();
+    return response()->json($usersHackathon);
+}
+
+public function destroy(Hackathon $hackathon): JsonResponse
+{
+     $hackathon->delete();
+     return response()->json(new HackathonResource($hackathon),204);
+}
 }
